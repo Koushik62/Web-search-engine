@@ -15,20 +15,29 @@ s = Service('chromedriver.exe')
 # Instantiate the webdriver
 driver = webdriver.Chrome(service=s)
 
-heading_class = ".mr-2.text-xl"
+heading_class = ".mr-2.text-label-1"
 body_class = ".px-5.pt-4"
-index = 1
 QDATA_FOLDER = "Qdata"
-
 
 def get_array_of_links():
     arr = []  # Array to store the lines of the file
-# Open the file
+    # Open the file
     with open("lc_problems.txt", "r") as file:
         # Read each line one by one
         for line in file:
             arr.append(line)
     return arr
+
+def get_last_successful_index():
+    index_file_path = os.path.join(QDATA_FOLDER, "index.txt")
+    if os.path.exists(index_file_path):
+        with open(index_file_path, "r") as index_file:
+            lines = index_file.readlines()
+            if lines:
+                last_line = lines[-1].strip()
+                if last_line.isdigit():
+                    return int(last_line)
+    return 0
 
 
 def add_text_to_index_file(text):
@@ -36,12 +45,10 @@ def add_text_to_index_file(text):
     with open(index_file_path, "a") as index_file:
         index_file.write(text + "\n")
 
-
 def add_link_to_Qindex_file(text):
     index_file_path = os.path.join(QDATA_FOLDER, "Qindex.txt")
     with open(index_file_path, "a") as Qindex_file:
         Qindex_file.write(text)
-
 
 def create_and_add_text_to_file(file_name, text):
     folder_path = os.path.join(QDATA_FOLDER, file_name)
@@ -50,17 +57,15 @@ def create_and_add_text_to_file(file_name, text):
     with open(file_path, "w") as new_file:
         new_file.write(text)
 
-
 def getPagaData(url, index):
     try:
         driver.get(url)
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, body_class)))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, body_class)))
         time.sleep(1)
         heading = driver.find_element(By.CSS_SELECTOR, heading_class)
         body = driver.find_element(By.CSS_SELECTOR, body_class)
         print(heading.text)
-        if (heading.text):
+        if heading.text:
             add_text_to_index_file(heading.text)
             add_link_to_Qindex_file(url)
             create_and_add_text_to_file(str(index), body.text)
@@ -70,12 +75,12 @@ def getPagaData(url, index):
         print(e)
         return False
 
-
 arr = get_array_of_links()
-for link in arr:
-    success = getPagaData(link, index)
-    if (success):
-        index = index+1
+start_index = get_last_successful_index() + 1
 
+for i, link in enumerate(arr[start_index:], start=start_index):
+    success = getPagaData(link, i)
+    if success:
+        index = i
 
 driver.quit()
