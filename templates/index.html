@@ -7,8 +7,21 @@
   <body>
     <div class="form">
       <form method="POST">
-        {{ form.hidden_tag() }} {{ form.search.label }} {{ form.search() }} {{
-        form.submit() }}
+        <div class = "a">
+          {{ form.hidden_tag() }}
+        </div> 
+
+        <div class = "b">
+            {{ form.search.label }}
+        </div> 
+
+        <div class = "c">
+          {{ form.search() }}
+        </div> 
+
+        <div class = "d">
+            {{ form.submit() }}
+        </div> 
       </form>
     </div>
     <div>
