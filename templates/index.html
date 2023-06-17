@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Codify</title>
+    <title>CodeSleuth</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="form">
-        <form method="POST">
-          <input id="csrf_token" name="csrf_token" type="hidden" value="ImE1ZGE0OWZlMDU5OGVmMjU1MGMyODM2NjVlNzA1NDk4NTQ4MGZjMWMi.ZI18bQ.8nMB-k5DZiEw55rZCUlBGJKLJaU">
-          <div class="search-box">
-            <label for="search">Enter your search term</label> <input id="search" name="search" type="text" value=""> <input id="submit" name="submit" type="submit" value="Search">
-          </div>
-        </form>
-      </div>
-      <div class="results">
-        
-      </div>
+    <div class="form">
+      <form method="POST">
+        {{ form.hidden_tag() }} {{ form.search.label }} {{ form.search() }} {{
+        form.submit() }}
+      </form>
     </div>
-  </body>
+    <div>
+      {% for result in results %}
+      <div class = "result">
+      <a href="{{ result['Question Link'] }}">{{ result['Question Link'] }}</a>
+      <div>
+       <br>
+       <br>
+     
+      {% endfor %}
+    </div>
+  </body>
 </html>
